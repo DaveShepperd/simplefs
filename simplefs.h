@@ -40,7 +40,13 @@
  * +---------------+
  */
 #ifdef __KERNEL__
+#include <linux/version.h>
 #include <linux/jbd2.h>
+/* compatibility macros */
+#define SIMPLEFS_AT_LEAST(major, minor, rev) \
+    LINUX_VERSION_CODE >= KERNEL_VERSION(major, minor, rev)
+#define SIMPLEFS_LESS_EQUAL(major, minor, rev) \
+    LINUX_VERSION_CODE <= KERNEL_VERSION(major, minor, rev)
 #endif
 
 struct simplefs_inode {
@@ -76,20 +82,17 @@ struct simplefs_sb_info {
 #ifdef __KERNEL__
     journal_t *journal;
     struct block_device *s_journal_bdev; /* v5.10+ external journal device */
+#if SIMPLEFS_AT_LEAST(6, 11, 0)
+#elif SIMPLEFS_AT_LEAST(6, 7, 0)
     struct bdev_handle
         *s_journal_bdev_handle;  /* v6.7+ external journal device */
+#endif
     unsigned long *ifree_bitmap; /* In-memory free inodes bitmap */
     unsigned long *bfree_bitmap; /* In-memory free blocks bitmap */
 #endif
 };
 
 #ifdef __KERNEL__
-#include <linux/version.h>
-/* compatibility macros */
-#define SIMPLEFS_AT_LEAST(major, minor, rev) \
-    LINUX_VERSION_CODE >= KERNEL_VERSION(major, minor, rev)
-#define SIMPLEFS_LESS_EQUAL(major, minor, rev) \
-    LINUX_VERSION_CODE <= KERNEL_VERSION(major, minor, rev)
 
 /* A 'container' structure that keeps the VFS inode and additional on-disk
  * data.

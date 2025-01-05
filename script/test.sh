@@ -105,7 +105,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 echo "Mount simplefs to 'test' ..."
-sudo mount -t simplefs -o loop,owner $IMAGE test
+sudo mount -t simplefs -o loop $IMAGE test
 if [ $? -ne 0 ]; then
     echo "Failed to mount simplefs to 'test'"
     exit 1
@@ -204,7 +204,7 @@ if [ $? -ne 0 ]; then
 fi
 sleep 1
 echo "Remounting filesystem..."
-sudo mount -t simplefs -o loop,owner $IMAGE test
+sudo mount -t simplefs -o loop $IMAGE test
 if [ $? -ne 0 ]; then
     echo "mount failed"
     exit 1
